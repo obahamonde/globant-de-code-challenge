@@ -1,0 +1,34 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-py"
+  interface = "asyncio"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model HiredEmployees {
+  id           Int      @id @default(autoincrement())
+  name        String
+  datetime    String
+  department_id Int
+  department  Departments @relation(fields: [department_id], references: [id])
+  job         Jobs       @relation(fields: [job_id], references: [id])
+  job_id      Int
+}
+
+model Departments {
+  id          Int      @id @default(autoincrement())
+  department  String
+  employees       HiredEmployees[]
+}
+
+model Jobs {
+  id         Int      @id @default(autoincrement())
+  job        String
+  employees      HiredEmployees[]
+}

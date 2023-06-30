@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+prisma = "*"
+fastapi = "*"
+python-multipart = "*"
+uvicorn = "*"
+
+[dev-packages]
+pylint = "*"
+isort = "*"
+black = "*"
+pytest = "*"
+pytest-asyncio = "*"
+
+[requires]
+python_version = "3.9"
