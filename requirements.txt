@@ -1,0 +1,6 @@
+fastapi
+prisma
+uvicorn
+python-dotenv
+names
+python-multipart

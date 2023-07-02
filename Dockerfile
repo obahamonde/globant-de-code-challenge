@@ -4,10 +4,8 @@ WORKDIR /app
 
 COPY . /app
 
-RUN pip install --trusted-host pypi.python.org -r requirements.txt && \
-    python -m prisma db push --force-reset && \
-    python -m prisma generate && \
-    python -m prisma py fetch
+RUN pip install -r requirements.txt && \
+    prisma generate
 
 EXPOSE 8080
 

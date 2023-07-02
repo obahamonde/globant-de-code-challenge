@@ -1,6 +1,7 @@
 import os
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
+from prisma.errors import DataError
 from prisma.models import Departments, Employees, Jobs
 
 from api.db import CSVModel
@@ -35,7 +36,6 @@ async def upload_employees_endpoint(file: UploadFile = File(...)):
             status_code=400, detail="File must named after the model"
         ) from exc
 
-
 @app.post("/jobs")
 async def upload_jobs_endpoint(file: UploadFile = File(...)):
     """Converts CSV File to JobCreate instances"""
@@ -57,6 +57,13 @@ async def upload_jobs_endpoint(file: UploadFile = File(...)):
         return {
             "status": "error",
             "detail": "File must named after the model",
+            "data": response
+        }
+    except DataError as exc:
+        response = await Jobs.prisma().find_many()
+        return {
+            "status": "error",
+            "detail": str(exc),
             "data": response
         }
 
@@ -85,3 +92,10 @@ async def upload_departments_endpoint(file: UploadFile = File(...)):
             "data": response
         }
         
+    except DataError as exc:
+        response = await Jobs.prisma().find_many()
+        return {
+            "status": "error",
+            "detail": str(exc),
+            "data": response
+        }
