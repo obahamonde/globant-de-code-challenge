@@ -19,16 +19,16 @@ services:
       - backend
 
 
-  #web:
-   # build: .
-    #volumes:
-     # - .:/app
-    #ports:
-     # - 5000
-    #depends_on:
-     # - db
-    #networks:
-     # - backend
+  web:
+    build: .
+    volumes:
+      - .:/app
+    ports:
+      - 5000
+    depends_on:
+      - db
+    networks:
+      - backend
 
 
 networks:

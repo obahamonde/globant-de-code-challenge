@@ -1,7 +1,9 @@
 """Main module of the API. Contains the endpoints for the SQL section of the test."""
+
 from collections import defaultdict
 from datetime import datetime
 
+from fastapi.responses import RedirectResponse
 from prisma.models import Employees
 
 from api import bootstrap
@@ -65,3 +67,15 @@ async def departments_overhiring():
     ]
 
     return above_average_departments
+
+
+@app.get("/")
+async def root():
+    """Redirects to the docs page
+    [TODO] Create a Frontend for the API
+    [TODO] More tests
+    [TODO] Add CI/CD
+    [TODO] Open to suggestions oscar.bahamonde.dev@gmail.com
+    
+    """
+    return RedirectResponse(url="/docs")
