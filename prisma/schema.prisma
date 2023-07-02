@@ -1,8 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client-py"
+  provider  = "prisma-client-py"
   interface = "asyncio"
 }
 
@@ -11,24 +8,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model HiredEmployees {
-  id           Int      @id @default(autoincrement())
-  name        String
-  datetime    String
+model Employees {
+  id            Int         @id @default(autoincrement())
+  name          String
+  datetime      String
   department_id Int
-  department  Departments @relation(fields: [department_id], references: [id])
-  job         Jobs       @relation(fields: [job_id], references: [id])
-  job_id      Int
+  job_id        Int
+  department    Departments @relation(fields: [department_id], references: [id])
+  job           Jobs        @relation(fields: [job_id], references: [id])
 }
 
 model Departments {
-  id          Int      @id @default(autoincrement())
-  department  String
-  employees       HiredEmployees[]
+  id         Int         @id @default(autoincrement())
+  department String
+  employees  Employees[]
 }
 
 model Jobs {
-  id         Int      @id @default(autoincrement())
-  job        String
-  employees      HiredEmployees[]
+  id        Int         @id @default(autoincrement())
+  job       String
+  employees Employees[]
 }

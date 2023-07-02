@@ -2,15 +2,9 @@ FROM python:3.9.7-slim-buster
 
 WORKDIR /app
 
-COPY requirements.txt requirements.txt
+COPY . /app
 
-RUN pip3 install -r --no-cache-dir requirements.txt
-
-RUN prisma db push && \
-    prisma generate && \
-    prisma py fetch
-
-COPY . .
+RUN pip install --trusted-host pypi.python.org -r requirements.txt
 
 EXPOSE 8080
 

@@ -4,10 +4,10 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-prisma = "*"
 fastapi = "*"
 python-multipart = "*"
-uvicorn = "*"
+python-dotenv = "*"
+mangum = "*"
 
 [dev-packages]
 pylint = "*"
@@ -15,6 +15,7 @@ isort = "*"
 black = "*"
 pytest = "*"
 pytest-asyncio = "*"
+uvicorn = "*"
 
 [requires]
 python_version = "3.9"
