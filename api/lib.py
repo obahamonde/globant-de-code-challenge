@@ -1,27 +1,53 @@
 from datetime import datetime
-from random import choice
+from random import choice, random
+from typing import *
 
 from names import get_full_name
+from prisma.models import Departments, Jobs
+from pydantic import BaseModel, Field  # pylint: disable=no-name-in-module
 
 
-class Faker:
+class FakeHelper(BaseModel):
     """Fake data generator"""
+
+    jobs: List[str] = Field(default=[])
+    deps: List[str] = Field(default=[])
+
+    async def run(self) -> None:
+        """Runs the Faker"""
+        jobs = await Jobs.prisma().find_many()
+        deps = await Departments.prisma().find_many()
+        self.jobs = [job.job for job in jobs]
+        self.deps = [dep.department for dep in deps]
 
     def gen_name(self) -> str:
         """Generates a random name"""
         return get_full_name()
 
     def gen_datetime(self) -> str:
-        """Generates a random datetime"""
-        return datetime.astimezone(datetime.now()).isoformat()
+        """Generates a random datetime in 2021"""
+        dtime = self.gen_timestamp()
+        return self.to_iso(dtime)
 
     def gen_timestamp(self) -> datetime:
-        """Generates a random timestamp"""
-        start = datetime(2021, 1, 1, 0, 0, 0)
-        end = datetime(2021, 12, 31, 23, 59, 59)
-        return choice([start, end])
+        """Generates a random timestamp between 2021-01-01 and 2022-01-01"""
+        start = datetime(2021, 1, 1)
+        end = datetime(2022, 1, 1)
+        random_date = start + (end - start) * random()
+        return random_date
 
+    def gen_job(self) -> str:
+        """Generates a random job id"""
+        return choice([job for job in self.jobs])
 
-def to_timestamp(iso: str):
-    """Converts an ISO datetime string to a timestamp"""
-    return datetime.fromisoformat(iso).timestamp()
+    def gen_department(self) -> str:
+        """Generates a random department id"""
+        return choice([dep for dep in self.deps])
+
+    def from_iso(self, iso: str) -> datetime:
+        """Converts an ISO datetime string to a datetime object"""
+        return datetime.fromisoformat(iso)
+
+    def to_iso(self, timestamp: datetime) -> str:
+        """Converts a datetime object to an ISO datetime string"""
+        return timestamp.isoformat()

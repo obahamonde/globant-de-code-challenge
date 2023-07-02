@@ -34,3 +34,17 @@ class CSVModel(BaseModel):
                         pass
         model = create_model(cls.__name__, **data[0])  # type: ignore
         return [model(**row) for row in data]
+
+    @classmethod
+    def to_csv(cls: Type[T], path: str, data: List[T]) -> str:
+        """Converts a list of Pydantic models to a CSV file"""
+        if not path.endswith(".csv"):
+            raise ValueError("File is not a CSV")
+        if not os.path.isdir("static"):
+            os.mkdir("static")
+        with open(path, "w", encoding="utf-8-sig") as csv_file:
+            writer = csv.DictWriter(csv_file, fieldnames=data[0].dict().keys())
+            writer.writeheader()
+            for row in data:
+                writer.writerow(row.dict())
+        return f"/static/{os.path.basename(path)}"

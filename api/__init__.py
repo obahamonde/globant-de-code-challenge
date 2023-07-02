@@ -1,3 +1,4 @@
+"""Application Factory"""
 from fastapi import FastAPI
 
 from api.handlers import app as api_router
