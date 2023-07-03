@@ -14,6 +14,8 @@
 - AWS EC2 - Deployment Environment
 - Uvicorn - ASGI Server
 - NGINX - Reverse Proxy
-- Cloudflare - DNS Management
+- Cloudflare - DNS Management and CDN
 
-Live [Here](https://globant.aiofauna.com)
+Live [Here](https://globant.aiofauna.com/docs)
+
+![Preview](image.png)
