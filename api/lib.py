@@ -7,7 +7,7 @@ from prisma.models import Departments, Jobs
 from pydantic import BaseModel, Field  # pylint: disable=no-name-in-module
 
 
-class FakeHelper(BaseModel):
+class FakerHelper(BaseModel):
     """Fake data generator"""
 
     jobs: List[str] = Field(default=[])
@@ -31,8 +31,8 @@ class FakeHelper(BaseModel):
 
     def gen_timestamp(self) -> datetime:
         """Generates a random timestamp between 2021-01-01 and 2022-01-01"""
-        start = datetime(2021, 1, 1)
-        end = datetime(2022, 1, 1)
+        start = datetime(year=2021, month=1, day=1)
+        end = datetime(year=2021, month=12, day=31)
         random_date = start + (end - start) * random()
         return random_date
 

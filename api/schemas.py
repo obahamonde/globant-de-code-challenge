@@ -6,9 +6,9 @@ from typing import *
 from pydantic import Field  # pylint: disable=no-name-in-module
 
 from api.db import CSVModel
-from api.lib import FakeHelper
+from api.lib import FakerHelper
 
-faker = FakeHelper()
+faker = FakerHelper()
 
 
 class EmployeeFaker(CSVModel):

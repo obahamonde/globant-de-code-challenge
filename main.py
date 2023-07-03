@@ -3,8 +3,8 @@
 from collections import defaultdict
 from datetime import datetime
 
-from fastapi.responses import RedirectResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from prisma.models import Employees
 
@@ -25,7 +25,7 @@ async def employees_quarterly():
 
     hires_per_quarter = defaultdict(lambda: defaultdict(int))
     for employee in employees:
-        quarter = (datetime.fromisoformat(employee.datetime).month - 1) % 3 + 1
+        quarter = (datetime.fromisoformat(employee.datetime).month - 1)//3 + 1
         key = (employee.department, employee.job)
         hires_per_quarter[key][quarter] += 1
 
