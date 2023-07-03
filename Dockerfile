@@ -4,10 +4,9 @@ WORKDIR /app
 
 COPY . /app
 
-RUN pip install -r requirements.txt && \
-    prisma db push && \
+RUN pip3 install -r requirements.txt && \
     prisma generate
 
-EXPOSE 8080
+EXPOSE 5000
 
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000","--reload"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]

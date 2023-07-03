@@ -4,16 +4,18 @@ from collections import defaultdict
 from datetime import datetime
 
 from fastapi.responses import RedirectResponse
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from prisma.models import Employees
 
 from api import bootstrap
 
 app = bootstrap()
-
+static = StaticFiles(directory="app/dist", html=True)
 # Section 2 - SQL
 
 
-@app.get("/employees/quarterly")
+@app.get("/api/employees/quarterly")
 async def employees_quarterly():
     """Number of employees hired for each job and department in 2021 divided by quarter"""
 
@@ -43,7 +45,7 @@ async def employees_quarterly():
     return output
 
 
-@app.get("/departments/overhiring")
+@app.get("/api/departments/overhiring")
 async def departments_overhiring():
     """
     List of ids, name and number of employees hired of each department that hired more
@@ -69,13 +71,14 @@ async def departments_overhiring():
     return above_average_departments
 
 
-@app.get("/")
-async def root():
-    """Redirects to the docs page
-    [TODO] Create a Frontend for the API
-    [TODO] More tests
-    [TODO] Add CI/CD
-    [TODO] Open to suggestions oscar.bahamonde.dev@gmail.com
-    
-    """
-    return RedirectResponse(url="/docs")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.mount("/", static, name="static")
+

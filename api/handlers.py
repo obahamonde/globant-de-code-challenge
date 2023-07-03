@@ -7,7 +7,7 @@ a local REST API that must:
 3. Be able to insert batch transactions (1 up to 1000 rows) with one request
 """
 import os
-
+import asyncio
 from fastapi import APIRouter, File, HTTPException, UploadFile
 from fastapi.responses import RedirectResponse
 from prisma.models import Departments, Employees, Jobs
@@ -16,7 +16,7 @@ from api.lib import datetime
 from api.schemas import (DepartmentCreate, EmployeeCreate, EmployeeFaker,
                          JobCreate, faker)
 
-app = APIRouter(prefix="/api")
+app = APIRouter(prefix="/api", tags=["csv"])
 
 # 1. Receive historical data from CSV files
 
@@ -32,7 +32,7 @@ async def upload_handler(file: UploadFile = File(...)):
         csv_file.write(contents)
 
 
-@app.get("/employees/mock")
+#@app.get("/employees/mock")
 async def mock_employee_handler():
     """Generates fake data and saves it to a CSV file"""
     _now = datetime.now().isoformat()
@@ -47,7 +47,7 @@ async def mock_employee_handler():
     }
 
 
-@app.get("/employees")
+#@app.get("/employees")
 async def get_employees_endpoint():
     """Returns all employees"""
     return await Employees.prisma().find_many()
@@ -62,15 +62,20 @@ async def upload_employees_endpoint(file: UploadFile = File(...)):
     try:
         await upload_handler(file)
         models = EmployeeCreate.from_csv(f"static/{file.filename}")
-        for model in models[:1000]:  # type: ignore
-            await Employees.prisma().create(data=model.dict())  # type: ignore
-        return await Employees.prisma().find_many()
-
+        if len(models) > 1000:
+            models = models[:1000]
+        await asyncio.gather(*[Employees.prisma().create(data=model.dict()) for model in models])
+        #return await Employees.prisma().find_many()
+        return {
+            "status": "success",
+            "message": "Employees created successfully",
+        }
     except AssertionError as exc:
-        raise HTTPException(
-            status_code=400, detail="File must named after the model"
-        ) from exc
-
+        print(exc)
+        return {
+            "status": "error",
+            "message": "File must named after the model",
+        }
 
 @app.post("/jobs")
 async def upload_jobs_endpoint(file: UploadFile = File(...)):
@@ -110,11 +115,9 @@ async def upload_departments_endpoint(file: UploadFile = File(...)):
         return await Departments.prisma().find_many()
     except AssertionError as exc:
         print(exc)
-        response = await Departments.prisma().find_many()
         return {
             "status": "error",
-            "detail": "File must named after the model",
-            "data": response,
+            "detail": "File must named after the model"
         }
 
 # Some extra endpoints for operational purposes disabled by default

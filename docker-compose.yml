@@ -10,7 +10,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_DB: postgres
       POSTGRES_HOST_AUTH_METHOD: trust
-      DATABASE_URL: postgres://postgres:postgres@db:5432/postgres?schema=public
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/postgres
     ports:
       - 5432:5432
     volumes:
@@ -20,16 +20,18 @@ services:
 
 
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
       - .:/app
     ports:
-      - 5000
+      - 5000:5000
     depends_on:
       - db
     networks:
       - backend
-
+    
 
 networks:
   backend:

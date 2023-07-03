@@ -7,7 +7,9 @@ name = "pypi"
 fastapi = "*"
 python-multipart = "*"
 python-dotenv = "*"
-mangum = "*"
+prisma = "*"
+names = "*"
+uvicorn = "*"
 
 [dev-packages]
 pylint = "*"
@@ -18,4 +20,4 @@ pytest-asyncio = "*"
 uvicorn = "*"
 
 [requires]
-python_version = "3.9"
+python_version = "^3.9"
